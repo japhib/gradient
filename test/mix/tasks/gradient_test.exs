@@ -220,6 +220,7 @@ defmodule Mix.Tasks.GradientTest do
   end
 
   def run_task(args), do: capture_io(fn -> Mix.Tasks.Gradient.run(args) end)
+  # def run_task(args), do: Mix.Tasks.Gradient.run(args)
 
   def test_opts(opts), do: ["--no-comile", "--no-deps"] ++ opts
 end
