@@ -38,6 +38,8 @@ defmodule Gradient do
     with {:ok, asts} <- ElixirFileUtils.get_forms(path, module),
          {:ok, first_ast} <- get_first_forms(asts),
          {:elixir, _} <- wrap_language_name(first_ast) do
+      # IO.inspect(asts, label: :ASTS)
+
       asts
       |> Enum.map(fn ast ->
         ast =
@@ -87,6 +89,8 @@ defmodule Gradient do
   end
 
   defp maybe_use_tokens(forms, opts) do
+    # IO.inspect(forms, label: :FORMS)
+
     unless opts[:no_tokens] do
       Gradient.ElixirFileUtils.load_tokens(forms)
     else
@@ -133,7 +137,7 @@ defmodule Gradient do
   defp maybe_specify_forms(forms, opts) do
     unless opts[:no_specify] do
       forms
-      |> put_source_path(opts)
+      # |> put_source_path(opts)
       |> AstSpecifier.specify()
     else
       forms
@@ -149,6 +153,8 @@ defmodule Gradient do
   end
 
   defp put_source_path(forms, opts) do
+    IO.inspect(opts, label: :OPTS)
+
     case opts[:source_path] do
       nil ->
         case opts[:app_path] do
@@ -158,8 +164,11 @@ defmodule Gradient do
           app_path ->
             {:attribute, anno, :file, {path, line}} = hd(forms)
 
+            new_path =
+              (String.to_charlist(app_path) ++ '/' ++ path) |> IO.inspect(label: :NEW_PATH)
+
             [
-              {:attribute, anno, :file, {String.to_charlist(app_path) ++ '/' ++ path, line}}
+              {:attribute, anno, :file, {new_path, line}}
               | tl(forms)
             ]
         end
