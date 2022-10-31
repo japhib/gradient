@@ -38,8 +38,6 @@ defmodule Gradient do
     with {:ok, asts} <- ElixirFileUtils.get_forms(path, module),
          {:ok, first_ast} <- get_first_forms(asts),
          {:elixir, _} <- wrap_language_name(first_ast) do
-      # IO.inspect(asts, label: :ASTS)
-
       asts
       |> Enum.map(fn ast ->
         ast =
@@ -137,7 +135,6 @@ defmodule Gradient do
   defp maybe_specify_forms(forms, opts) do
     unless opts[:no_specify] do
       forms
-      # |> put_source_path(opts)
       |> AstSpecifier.specify()
     else
       forms
